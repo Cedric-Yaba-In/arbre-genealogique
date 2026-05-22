@@ -6,7 +6,12 @@ export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ 
   const session = await getSession();
   if (!session) return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
 
-  const { id } = await params;
-  await prisma.relation.delete({ where: { id } });
-  return NextResponse.json({ success: true });
+  try {
+    const { id } = await params;
+    await prisma.relation.delete({ where: { id } });
+    return NextResponse.json({ success: true });
+  } catch (e: any) {
+    console.error("[DELETE /api/relations/:id] Erreur:", e?.message, "| code:", e?.code);
+    return NextResponse.json({ error: e?.message ?? "Erreur interne" }, { status: 500 });
+  }
 }

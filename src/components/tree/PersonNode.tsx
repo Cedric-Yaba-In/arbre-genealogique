@@ -48,7 +48,7 @@ function PersonNode({ data, selected }: NodeProps) {
       className={`relative group cursor-pointer transition-all duration-200 ${selected ? "scale-105" : ""}`}
       onClick={() => setSelectedPerson(nodeData.id)}
     >
-      <Handle type="target" position={Position.Top} className="!bg-indigo-500 !w-3 !h-3" />
+      <Handle type="target" position={Position.Top} id="top" className="!bg-indigo-500 !w-2 !h-2" />
 
       <div
         className={`
@@ -136,9 +136,12 @@ function PersonNode({ data, selected }: NodeProps) {
         </button>
       )}
 
-      <Handle type="source" position={Position.Bottom} className="!bg-indigo-500 !w-3 !h-3" />
-      <Handle type="source" id="left" position={Position.Left} className="!bg-sky-400 !w-3 !h-3" />
-      <Handle type="source" id="right" position={Position.Right} className="!bg-sky-400 !w-3 !h-3" />
+      <Handle type="source" position={Position.Bottom} id="bottom" className="!bg-indigo-500 !w-2 !h-2" />
+      <Handle type="source" id="left"  position={Position.Left}  className="!bg-violet-500 !w-2 !h-2" />
+      <Handle type="source" id="right" position={Position.Right} className="!bg-violet-500 !w-2 !h-2" />
+      {/* Handles target pour recevoir les arêtes de mariage */}
+      <Handle type="target" id="left"  position={Position.Left}  className="!bg-violet-500 !w-2 !h-2" style={{ top: "40%" }} />
+      <Handle type="target" id="right" position={Position.Right} className="!bg-violet-500 !w-2 !h-2" style={{ top: "40%" }} />
     </div>
   );
 }

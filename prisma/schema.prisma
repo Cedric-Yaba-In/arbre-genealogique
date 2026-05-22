@@ -1,0 +1,47 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Person {
+  id          String   @id @default(uuid())
+  firstName   String   @map("first_name") @db.VarChar(100)
+  lastName    String   @map("last_name") @db.VarChar(100)
+  gender      String   @db.VarChar(10)
+  birthDate   String?  @map("birth_date") @db.VarChar(20)
+  deathDate   String?  @map("death_date") @db.VarChar(20)
+  birthPlace  String?  @map("birth_place") @db.VarChar(200)
+  photoUrl    String?  @map("photo_url")
+  bio         String?
+  positionX   Int      @default(0) @map("position_x")
+  positionY   Int      @default(0) @map("position_y")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  relationsFrom Relation[] @relation("FromPerson")
+  relationsTo   Relation[] @relation("ToPerson")
+
+  @@map("persons")
+}
+
+model Relation {
+  id             String   @id @default(uuid())
+  fromPersonId   String   @map("from_person_id")
+  toPersonId     String   @map("to_person_id")
+  relationType   String   @map("relation_type") @db.VarChar(50)
+  successionType String?  @map("succession_type") @db.VarChar(50)
+  marriageOrder  Int?     @map("marriage_order")
+  marriageDate   String?  @map("marriage_date") @db.VarChar(20)
+  // Pour filiation : id de l'autre parent (permet de savoir avec quel conjoint l'enfant a été conçu)
+  coParentId     String?  @map("co_parent_id") @db.VarChar(36)
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  fromPerson Person @relation("FromPerson", fields: [fromPersonId], references: [id], onDelete: Cascade)
+  toPerson   Person @relation("ToPerson", fields: [toPersonId], references: [id], onDelete: Cascade)
+
+  @@map("relations")
+}
